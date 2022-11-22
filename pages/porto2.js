@@ -12,31 +12,51 @@ import {
 } from "@chakra-ui/react";
 import { Input, InputRightElement } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
-import { getRepos, searchRepos } from "./api/github";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import githubGif from "/public/github.gif";
 import Head from "next/head";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import Paginations from "../components/Pagination";
+import { paginate } from "./../utils/paginate";
 
-export default function Portofolio() {
-  const [repos, setRepos] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filteredRepos, setFilteredRepos] = useState([]);
-  
-
+const Porto2 = () => {
+  const [posts, setPosts] = useState([]);
+  const pageSize = 6;
+  const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
-    getRepos().then((result) => {
-      setRepos(result);
-    });
+    const getPosts = async () => {
+      const { data: res } = await axios.get(
+        "https://api.github.com/users/muhammadanjothosatru/repos"
+      );
+      setPosts(res);
+    };
+    getPosts();
   }, []);
 
-  useEffect(() => {
-    setFilteredRepos(
-      repos.filter((repo) =>
-        repo.name.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, repos]);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevChange = (page) => {
+    if (currentPage === 1) {
+        setCurrentPage(page);
+      } else {
+        setCurrentPage(page - 1);
+      }
+    
+  };
+
+  const handleNextChange = (page) => {
+    if (currentPage === 3) {
+        setCurrentPage(page);
+      } else {
+        setCurrentPage(page + 1);
+      }
+  };
+
+  const paginatePosts = paginate(posts, currentPage, pageSize);
+  console.log(paginatePosts)
 
   return (
     <>
@@ -49,14 +69,14 @@ export default function Portofolio() {
           <Input
             placeholder="Search"
             size="md"
-            onChange={({ target }) => setSearch(target.value)}
+            // onChange={({ target }) => setSearch(target.value)}
           />
           <InputRightElement children={<FaSearch color="gray" />} />
         </InputGroup>
       </Container>
       <Center py={3}>
         <SimpleGrid px={150} columns={3} spacing={8}>
-          {filteredRepos.map((repos) => (
+          {paginatePosts.map((repos) => (
             <Box
               maxW={"400px"}
               w={"full"}
@@ -111,6 +131,18 @@ export default function Portofolio() {
           ))}
         </SimpleGrid>
       </Center>
+      <Center py={5}>
+        <Paginations
+          items={posts.length}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          prevPages={handlePrevChange}
+          nextPages={handleNextChange}
+          onPageChange={handlePageChange}
+        />
+      </Center>
     </>
   );
-}
+};
+
+export default Porto2;
