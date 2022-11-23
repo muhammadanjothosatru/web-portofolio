@@ -40,7 +40,7 @@ function NavbarTest() {
               display={{ base: "none", md: "flex" }}
             >
               <Link href="/">Home</Link>
-              <Link href="/portofolio">Portofolio</Link>
+              <Link href="/porto">Portofolio</Link>
             </HStack>
           </HStack>
 

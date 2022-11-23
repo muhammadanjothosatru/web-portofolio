@@ -4,6 +4,9 @@ const Paginations = ({ items, pageSize, currentPage, onPageChange, prevPages, ne
   if (Math.ceil(pageCount) === 1) return null;
   const pages = _.range(1, pageCount + 1);
 
+  const lastpages = pages.length;
+
+
   function unEscape(htmlStr) {
     htmlStr = htmlStr.replace(/&lt;/g, "<");
     htmlStr = htmlStr.replace(/&gt;/g, ">");
