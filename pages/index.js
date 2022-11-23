@@ -35,11 +35,11 @@ export default function Home() {
       <Container maxW="container.md" py={5} justifyContent="center">
         <Center m={10}>
           <div style={{ borderRadius: "5px", overflow: "hidden" }}>
-            <Image width={300} height={300} src={myGif} />
+            <Image sizes="300" alt="" src={myGif} />
           </div>
         </Center>
         <Container px={5} maxW="container.md">
-          <Heading mb={2}>Hi, I'm Muhammad Anjotho Satru</Heading>
+          <Heading mb={2}>Hi, I am Muhammad Anjotho Satru</Heading>
           <Text mb={5} color={colorSecondary[colorMode]}>
             Graduate from Computer Engineering at Institut Teknologi Sepuluh
             Nopember. I have passion in technology. Especially in Web

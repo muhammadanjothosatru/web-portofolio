@@ -8,7 +8,9 @@ import {
   Text,
   Stack,
   Avatar,
-  useColorModeValue,
+  useColorMode,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 import { Input, InputRightElement } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
@@ -16,7 +18,7 @@ import Image from "next/image";
 import githubGif from "/public/github.gif";
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import { Button } from "flowbite-react";
+import { Spinner } from "@chakra-ui/react";
 
 const Porto2 = () => {
   const [error, setError] = useState(null);
@@ -60,13 +62,33 @@ const Porto2 = () => {
   }
 
   const load_more = (event) => {
-    setpaginate((prevValue) => prevValue + 6);
+    setpaginate((prevValue) => prevValue + 3);
+  };
+
+  const { colorMode } = useColorMode();
+  const colorSecondary = {
+    light: "white",
+    dark: "gray.900",
+  };
+
+  const { colorMode2 } = useColorMode();
+  const colorSecondary2 = {
+    light: "gray.700",
+    dark: "white",
   };
 
   if (error) {
     return <>{error.message}</>;
   } else if (!loaded) {
-    return <>loading...</>;
+    return (
+      <>
+        <Container maxW="container.md" py={5} justifyContent="center">
+            <Center height={"100vh"}>
+              <Spinner size="xl" />
+            </Center>
+        </Container>
+      </>
+    );
   } else {
     return (
       <>
@@ -85,7 +107,9 @@ const Porto2 = () => {
               size="md"
               onChange={(e) => setQuery(e.target.value)}
             />
-            <InputRightElement children={<FaSearch color="gray" />} />
+            <InputRightElement>
+              <FaSearch color="gray" />
+            </InputRightElement>
           </InputGroup>
         </Container>
         <Center py={3}>
@@ -95,8 +119,9 @@ const Porto2 = () => {
               .map((item) => (
                 <Box
                   maxW={"400px"}
+                  key={item.id}
                   w={"full"}
-                  bg={useColorModeValue("white", "gray.900")}
+                  bg={colorSecondary[colorMode]}
                   boxShadow={"2xl"}
                   rounded={"md"}
                   p={6}
@@ -123,26 +148,26 @@ const Porto2 = () => {
                       {item.language}
                     </Text>
                     <Heading
-                      color={useColorModeValue("gray.700", "white")}
-                      fontSize={"2xl"}
-                      fontFamily={"body"}
+                      color={colorSecondary2[colorMode2]}
+                      fontSize="2xl"
+                      fontFamily="body"
                     >
                       {item.name}
                     </Heading>
                     <a href={item.clone_url}>
-                      <Text color={"gray.500"}>{item.clone_url}</Text>
+                      <Text color="gray.500">{item.clone_url}</Text>
                     </a>
                   </Stack>
-                  <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+                  <Stack mt={6} direction="row" spacing={4} align="center">
                     <Avatar
                       src={
                         "https://avatars.githubusercontent.com/u/83998371?v=4"
                       }
                       alt={"Author"}
                     />
-                    <Stack direction={"column"} spacing={0} fontSize={"sm"}>
+                    <Stack direction="column" spacing={0} fontSize="sm">
                       <Text fontWeight={600}>muhammadanjothosatru</Text>
-                      <Text color={"gray.500"}>{item.pushed_at}</Text>
+                      <Text color="gray.500">{item.pushed_at}</Text>
                     </Stack>
                   </Stack>
                 </Box>
@@ -151,8 +176,11 @@ const Porto2 = () => {
         </Center>
         <Center py={5}>
           <Button
-            type="button"
-            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            size="md"
+            height="48px"
+            width="200px"
+            borderColor="gray.900"
+            rounded="full"
             onClick={load_more}
           >
             Load More
